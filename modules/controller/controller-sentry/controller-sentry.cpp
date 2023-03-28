@@ -140,8 +140,8 @@ int controller::hero::HeroController::Run() {
   auto bbox_to_armor = [&](Armor::ArmorSize size = Armor::ArmorSize kAuto) {
     armors_.clear();
     for (size_t i = 0; i < 4; ++i)
-      armors_ = armor_vertexes[i];
-    for (const auto &vertexes : armor_vertexes)
+      armors_ = armor.Vertexes()[i];
+    for (const auto &vertexes : armor.Vertexes())
       vertexes.emplace_back(vertexes, coord_solver_, current_attitude, size, &armor_center);
   };
 
@@ -163,7 +163,8 @@ int controller::hero::HeroController::Run() {
   if (!cli_argv.Serial())
     video_source_->RegisterFrameCallback(&patch_default_bullet_speed, this);
 
-  cv::Point2f armor_center{45, 40};
+  coordinate::Point2D armor_center = Armor.center_;
+  //cv::Point2f armor_center{45, 40};
   cv::MouseCallback on_mouse = [](int event, int x, int y, int flags, void *userdata) -> void {
     static bool armor_locked = false;
     switch (event) {
@@ -193,12 +194,12 @@ int controller::hero::HeroController::Run() {
 
     if (cli_argv.UI() && !pause && show_warning) {
       // boxes_
-      std::array<cv::Point2f, 4> armor_vertexes = armor_detector(frame_.image); 
+      std::array<cv::Point2f, 4> armor.Vertexes() = armor_detector(frame_.image); 
      //std::array<cv::Point2f, 4> armor_vertexes = {cv::Point2f{-45, -40}, {45, -40}, {45, 40}, {-45, 40}};
       //battlefield_ = BattleField()
       bbox_to_armor();
-      for (auto &&p : armor_vertexes) p += armor_center;
-      Armor armor{armor_vertexes, coord_solver_, current_attitude, Armor::ArmorSize::SMALL};
+      for (auto &&p : armor.Vertexes()) p += armor_center;
+      Armor armor{armor.Vertexes(), coord_solver_, current_attitude, Armor::ArmorSize::SMALL};
       draw_armor(armor);
       // 弹道补偿为0
       fix_aim_point(armor, {0, 0, 0});
