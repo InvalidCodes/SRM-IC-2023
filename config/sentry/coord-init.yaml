@@ -1,0 +1,5 @@
+%YAML:1.0
+---
+EA_CAM_WORLD: [ 0, 0, 0 ]  # roll+: right, yaw+: right, pitch+: above
+CTV_CAM_IMU: [ 0, 0, 0 ]  # x+: right, y+: below, z+: front
+CTV_IMU_WORLD: [ 0, 0, 0 ]  # x+: right, y+: below, z+: front
